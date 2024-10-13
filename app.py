@@ -2,50 +2,52 @@ import streamlit as st
 import pandas as pd
 import json
 import os
-from datetime import date
+from datetime import date, datetime
 
-# Funciones para guardar y cargar los datos en un archivo JSON
-def cargar_datos(nombre_archivo):
-    if os.path.exists(nombre_archivo):
-        try:
-            with open(nombre_archivo, 'r') as archivo:
-                data = archivo.read()
-                if data.strip():  # Verifica si el archivo no está vacío
-                    return pd.read_json(nombre_archivo)
-                else:
-                    return pd.DataFrame(columns=["Mes", "Concepto", "Cantidad", "Pagado", "Categoría", "Fecha"])
-        except ValueError:  # Atrapa cualquier error de lectura de JSON
+with st.expander("Opciones avanzadas: Gestión de archivos y categorías"):
+    # Funciones para guardar y cargar los datos en un archivo JSON
+    def cargar_datos(nombre_archivo):
+        if os.path.exists(nombre_archivo):
+            try:
+                with open(nombre_archivo, 'r') as archivo:
+                    data = archivo.read()
+                    if data.strip():  # Verifica si el archivo no está vacío
+                        return pd.read_json(nombre_archivo)
+                    else:
+                        return pd.DataFrame(columns=["Mes", "Concepto", "Cantidad", "Pagado", "Categoría", "Fecha"])
+            except ValueError:  # Atrapa cualquier error de lectura de JSON
+                return pd.DataFrame(columns=["Mes", "Concepto", "Cantidad", "Pagado", "Categoría", "Fecha"])
+        else:
             return pd.DataFrame(columns=["Mes", "Concepto", "Cantidad", "Pagado", "Categoría", "Fecha"])
-    else:
-        return pd.DataFrame(columns=["Mes", "Concepto", "Cantidad", "Pagado", "Categoría", "Fecha"])
 
-def guardar_datos(nombre_archivo, datos):
-    with open(nombre_archivo, 'w') as archivo:
-        archivo.write(datos.to_json(orient='records', date_format='iso'))
+    def guardar_datos(nombre_archivo, datos):
+        with open(nombre_archivo, 'w') as archivo:
+            archivo.write(datos.to_json(orient='records', date_format='iso'))
 
-# Funciones para gestionar categorías
-def cargar_categorias(nombre_archivo):
-    if os.path.exists(nombre_archivo):
-        try:
-            with open(nombre_archivo, 'r') as archivo:
-                return json.load(archivo)
-        except ValueError:
-            return ["Casa", "Deporte", "Alimentación / Hogar", "Salir Fuera"]  # Categorías por defecto
-    else:
-        return ["Casa", "Deporte", "Alimentación / Hogar", "Salir Fuera"]
+    # Funciones para gestionar categorías
+    def cargar_categorias(nombre_archivo):
+        if os.path.exists(nombre_archivo):
+            try:
+                with open(nombre_archivo, 'r') as archivo:
+                    return json.load(archivo)
+            except ValueError:
+                return ["Casa", "Deporte", "Alimentación / Hogar", "Salir Fuera"]  # Categorías por defecto
+        else:
+            return ["Casa", "Deporte", "Alimentación / Hogar", "Salir Fuera"]
 
-def guardar_categorias(nombre_archivo, categorias):
-    with open(nombre_archivo, 'w') as archivo:
-        json.dump(categorias, archivo)
+    def guardar_categorias(nombre_archivo, categorias):
+        with open(nombre_archivo, 'w') as archivo:
+            json.dump(categorias, archivo)
 
-# Archivo para las categorías
-archivo_categorias = "categorias.json"
-categorias = cargar_categorias(archivo_categorias)
+    # Archivo para las categorías
+    archivo_categorias = "categorias.json"
+    categorias = cargar_categorias(archivo_categorias)
 
-nombre_archivo = "gastos_fijos.json"
+    nombre_archivo = "gastos_fijos.json"
 
-# Cargar datos desde el archivo JSON
-df = cargar_datos(nombre_archivo)
+    # Cargar datos desde el archivo JSON
+    df = cargar_datos(nombre_archivo)
+
 
 # Validar si existe la columna 'Mes' y 'Categoría', si no, agregarla
 if 'Mes' not in df.columns:
@@ -57,7 +59,7 @@ if 'Categoría' not in df.columns:
 st.title("❤️ Gestión de Gastos Fijos Mensuales")
 
 # Selección de mes en la barra lateral
-mes_seleccionado = st.sidebar.selectbox("Selecciona el mes", 
+mes_seleccionado = st.sidebar.selectbox("Gastos Mes", 
                                         ["Octubre 2024", "Noviembre 2024", "Diciembre 2024"])
 
 # Filtrar los datos por mes
@@ -180,3 +182,132 @@ if st.button("Eliminar categoría"):
         st.warning(f"No se pudo eliminar la categoría '{categoria_a_editar}'.")
 
 
+
+# Funciones para guardar y cargar los eventos en un archivo JSON
+def cargar_eventos(nombre_archivo):
+    if os.path.exists(nombre_archivo):
+        try:
+            with open(nombre_archivo, 'r') as archivo:
+                data = archivo.read()
+                if data.strip():  # Verifica si el archivo no está vacío
+                    return pd.read_json(nombre_archivo)
+                else:
+                    return pd.DataFrame(columns=["Fecha", "Hora", "Quien", "Concepto", "Todo_el_dia"])
+        except ValueError:  # Atrapa cualquier error de lectura de JSON
+            return pd.DataFrame(columns=["Fecha", "Hora", "Quien", "Concepto", "Todo_el_dia"])
+    else:
+        return pd.DataFrame(columns=["Fecha", "Hora", "Quien", "Concepto", "Todo_el_dia"])
+
+# Funciones para guardar y cargar los eventos en un archivo JSON
+def cargar_eventos(nombre_archivo):
+    if os.path.exists(nombre_archivo):
+        try:
+            with open(nombre_archivo, 'r') as archivo:
+                data = archivo.read()
+                if data.strip():  # Verifica si el archivo no está vacío
+                    return pd.read_json(nombre_archivo)
+                else:
+                    return pd.DataFrame(columns=["Fecha", "Hora", "Quien", "Concepto", "Todo_el_dia"])
+        except ValueError:  # Atrapa cualquier error de lectura de JSON
+            return pd.DataFrame(columns=["Fecha", "Hora", "Quien", "Concepto", "Todo_el_dia"])
+    else:
+        return pd.DataFrame(columns=["Fecha", "Hora", "Quien", "Concepto", "Todo_el_dia"])
+
+def guardar_eventos(nombre_archivo, eventos):
+    with open(nombre_archivo, 'w') as archivo:
+        archivo.write(eventos.to_json(orient='records', date_format='iso'))
+
+# Nombre del archivo JSON para los eventos
+nombre_archivo_eventos = "eventos.json"
+
+# Cargar eventos desde el archivo JSON
+df_eventos = cargar_eventos(nombre_archivo_eventos)
+
+# Título de la aplicación
+st.title("❤️ Gestión de Eventos")
+
+# Sección para añadir eventos
+st.header("Añadir nuevos eventos")
+
+# Formulario para agregar eventos
+with st.form("Añadir evento"):
+    rango_fechas = st.date_input("Selecciona el rango de fechas", value=(date.today(), date.today()), help="Selecciona una fecha de inicio y una fecha de finalización")
+    todo_el_dia = st.checkbox("¿Todo el día?")
+    
+    if not todo_el_dia:
+        hora_evento = st.time_input("Hora del evento", value=datetime.now().time())
+    else:
+        hora_evento = None
+
+    quien_evento = st.selectbox("¿Quién lo hace?", ["Juntos", "Quintero", "Andreea"])
+    concepto_evento = st.text_input("Concepto del evento")
+    
+    # Botón de submit
+    submit_evento = st.form_submit_button("Añadir evento")
+
+# Añadir el nuevo evento al DataFrame
+if submit_evento and concepto_evento:
+    fecha_inicio, fecha_fin = rango_fechas
+    rango_dias = pd.date_range(fecha_inicio, fecha_fin).tolist()
+    
+    for fecha in rango_dias:
+        nuevo_evento = pd.DataFrame({
+            "Fecha": [str(fecha.date())],
+            "Hora": [str(hora_evento) if hora_evento else "Todo el día"],
+            "Quien": [quien_evento],
+            "Concepto": [concepto_evento],
+            "Todo_el_dia": [todo_el_dia]
+        })
+        
+        df_eventos = pd.concat([df_eventos, nuevo_evento], ignore_index=True)
+    
+    guardar_eventos(nombre_archivo_eventos, df_eventos)
+    st.success(f"Evento '{concepto_evento}' añadido correctamente para los días {fecha_inicio} a {fecha_fin}.")
+
+# Mostrar calendario de eventos
+st.header("Calendario de eventos")
+
+# Filtrar eventos por el mes seleccionado
+mes_actual = datetime.now().month
+ano_actual = datetime.now().year
+
+# Mostrar eventos del mes actual por defecto
+mes_seleccionado = st.sidebar.selectbox("Eventos Mes", [f"{mes_actual}/{ano_actual}"] + [f"{mes}/{ano_actual}" for mes in range(mes_actual + 1, 13)])
+
+# Convertir la selección de mes en formato datetime
+mes, ano = map(int, mes_seleccionado.split('/'))
+
+# Filtrar eventos por mes y año seleccionados
+df_eventos_mes = df_eventos[
+    (pd.to_datetime(df_eventos["Fecha"]).dt.month == mes) &
+    (pd.to_datetime(df_eventos["Fecha"]).dt.year == ano)
+]
+
+# Ordenar los eventos por fecha
+df_eventos_mes = df_eventos_mes.sort_values(by="Fecha")
+
+# Mostrar los eventos del mes seleccionado, día por día si están en un rango
+if not df_eventos_mes.empty:
+    for index, evento in df_eventos_mes.iterrows():
+        fecha_evento = pd.to_datetime(evento["Fecha"])
+        concepto_evento = evento["Concepto"]
+        quien_evento = evento["Quien"]
+        hora_evento = evento["Hora"]
+
+        # Limpiar cualquier valor nulo en hora_evento
+        if pd.isna(hora_evento) or hora_evento == "Todo el día":
+            hora_evento_str = "Todo el día"
+        else:
+            hora_evento_str = pd.to_datetime(hora_evento).strftime('%H:%M')  # Formato HH:MM sin segundos
+
+        # Mostrar el evento en cada día con botones de edición y eliminación
+        st.write(f"📅 {fecha_evento.strftime('%Y-%m-%d')} - {hora_evento_str} - {quien_evento} - {concepto_evento}")
+
+        # Botones eliminar
+
+        if st.button("Eliminar", key=f"delete_{index}"):
+            df_eventos = df_eventos.drop(index).reset_index(drop=True)
+            guardar_eventos(nombre_archivo_eventos, df_eventos)
+            st.success("Evento eliminado correctamente.")
+else:
+    st.write("No hay eventos para este mes.")
