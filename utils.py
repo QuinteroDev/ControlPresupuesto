@@ -141,11 +141,10 @@ if submit and concepto:
 df = pd.concat([df[df["Mes"] != mes_seleccionado], st.session_state.gastos], ignore_index=True)
 guardar_datos(nombre_archivo, df)
 
-# Sección para gestionar CRUD de categorías
-st.header("Gestionar categorías")
-
 # Formulario para agregar nuevas categorías
+st.header("Agregar nueva categoría")
 nueva_categoria = st.text_input("Nombre de la nueva categoría")
+
 if st.button("Añadir nueva categoría"):
     if nueva_categoria and nueva_categoria not in categorias:
         categorias.append(nueva_categoria)
@@ -155,28 +154,3 @@ if st.button("Añadir nueva categoría"):
         st.warning(f"La categoría '{nueva_categoria}' ya existe.")
     else:
         st.warning("El nombre de la categoría no puede estar vacío.")
-
-# Sección para editar y eliminar categorías existentes
-categoria_a_editar = st.selectbox("Selecciona una categoría para editar o eliminar", categorias)
-
-nuevo_nombre_categoria = st.text_input("Editar nombre de la categoría", value=categoria_a_editar)
-if st.button("Guardar cambios en categoría"):
-    if nuevo_nombre_categoria and nuevo_nombre_categoria not in categorias:
-        categorias[categorias.index(categoria_a_editar)] = nuevo_nombre_categoria
-        guardar_categorias(archivo_categorias, categorias)
-        st.success(f"La categoría '{categoria_a_editar}' ha sido renombrada a '{nuevo_nombre_categoria}' correctamente.")
-    elif nuevo_nombre_categoria in categorias:
-        st.warning(f"El nombre '{nuevo_nombre_categoria}' ya existe.")
-    else:
-        st.warning("El nombre de la categoría no puede estar vacío.")
-
-# Botón para eliminar la categoría
-if st.button("Eliminar categoría"):
-    if categoria_a_editar in categorias:
-        categorias.remove(categoria_a_editar)
-        guardar_categorias(archivo_categorias, categorias)
-        st.success(f"La categoría '{categoria_a_editar}' ha sido eliminada correctamente.")
-    else:
-        st.warning(f"No se pudo eliminar la categoría '{categoria_a_editar}'.")
-
-
